@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs') // 載入 bcrypt
 const { User, Comment, Restaurant, Favorite, Like, Followship } = require('../models')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -49,9 +50,12 @@ const userController = {
         if (!user) throw new Error("User didn't exist!")
 
         const userComments = user.Comments || 0
-
+        console.log(user.toJSON())
         return res.render('users/profile', {
-          user: user.toJSON(),
+          user: {
+            ...user.toJSON(),
+            editable: Number(req.user.id) === user.id
+          },
           userCommentCount: userComments.length
         })
       })
@@ -67,13 +71,18 @@ const userController = {
       .catch(err => next(err))
   },
   putUser: (req, res, next) => {
-    return User.findByPk(req.params.id)
-      .then(user => {
+    const { name } = req.body
+    const { file } = req
+    console.log(req.body)
+    if (!name) throw new Error('User name is required!')
+
+    return Promise.all([User.findByPk(req.params.id), imgurFileHandler(file)])
+      .then(([user, filePath]) => {
         if (!user) throw new Error("User didn't exist!")
-        if (Number(req.params.id) !== req.user.id) {
-          throw new Error("You can't edit other's profile!")
-        }
-        return user.update(req.body)
+        return user.update({
+          name,
+          image: filePath || user.image
+        })
       })
       .then(() => {
         req.flash('success_messages', '使用者資料編輯成功')

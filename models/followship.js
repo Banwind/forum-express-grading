@@ -13,13 +13,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   Followship.init(
     {
-      followerId: DataTypes.INTEGER, // 修改這裡
-      followingId: DataTypes.INTEGER // 修改這裡
+      followerId: DataTypes.INTEGER,
+      followingId: DataTypes.INTEGER
     },
     {
       sequelize,
       modelName: 'Followship',
-      tableName: 'Followships', // 新增這裡
+      tableName: 'Followships',
       underscored: true
     }
   )
