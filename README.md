@@ -1,6 +1,3 @@
-對不起，我在將內容轉換為 Markdown 格式時發生了錯誤。以下是修正後的 Markdown 格式：
-
-```markdown
 # Forum Express Grading
 
 這是一個基於 Express 框架的論壇應用程式，提供使用者註冊、登入、發布文章、留言等功能。
@@ -21,15 +18,7 @@
 npm install
 ```
 
-### 3. 設定環境變數
-
-在專案根目錄中建立一個 `.env` 檔案，並根據您的需要設定以下環境變數：
-
-```
-SESSION_SECRET=your_session_secret
-```
-
-### 4. 建立資料庫
+### 3. 建立資料庫
 
 確保您已在本地環境中安裝 MySQL 資料庫，並在 `.env` 檔案中設定相關資料庫連線設定。
 
@@ -40,25 +29,22 @@ npx sequelize-cli db:migrate
 npx sequelize-cli db:seed:all
 ```
 
-### 5. 啟動應用程式
+### 4. 啟動應用程式
 
 執行下列指令啟動應用程式：
 
 ```
-npm start
+npm run start
 ```
 
 應用程式將在本地主機的預設埠號（通常為 3000）上運行。您可以在瀏覽器中輸入 `http://localhost:3000` 訪問應用程式。
 
-### 6. 執行測試
+### 5. 執行測試
 
 執行下列指令運行測試：
 
 ```
-npm test
+npm run test
+npx mocha tests/R01.test.js --exit
 ```
-
-測試將會自動執行並報告結果。
-```
-
-非常抱歉之前的格式有誤，這次已經修正正確的 Markdown 格式，感謝您的指正！
+如果測試有誤，請單獨一隻測試，自行將R01改名成需要的測試檔
