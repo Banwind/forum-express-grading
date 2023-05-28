@@ -50,7 +50,6 @@ const userController = {
         if (!user) throw new Error("User didn't exist!")
 
         const userComments = user.Comments || 0
-        console.log(user.toJSON())
         return res.render('users/profile', {
           user: {
             ...user.toJSON(),
