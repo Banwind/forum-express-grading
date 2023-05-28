@@ -8,7 +8,9 @@ describe('# 測試環境初始化', function () {
       request(app)
         .get('/')
         .end(function (err, res) {
-          done()
+          console.log(err); // 加入這行
+          console.log(res); // 加入這行
+          done();
         })
     })
   })

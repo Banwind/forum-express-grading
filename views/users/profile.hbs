@@ -16,6 +16,7 @@
 </div>
 
 <div class="comments-section mt-3">
+  <p>已評論餐廳數:{{ user.CommentCount }}</p>
   {{#each user.Comments}}
   <a href="/restaurants/{{ this.Restaurant.id }}">
     <img src="{{ this.Restaurant.image }}" alt="" width='10%'>

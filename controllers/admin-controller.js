@@ -113,7 +113,7 @@ const adminController = {
     return User.findAll({ raw: true })
       .then(users => {
         if (!users) throw new Error("Users didn't exist!")
-        res.render('/admin/users', { users })
+        res.render('admin/users', { users })
       })
       .catch(err => next(err))
   },

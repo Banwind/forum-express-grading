@@ -17,11 +17,9 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express()
 const port = process.env.PORT || 3000
 
-// const db = require('./models') // 暫時新增這行，引入資料庫，檢查完可刪
-
-app.use(express.urlencoded({ extended: true })) // body-parser
 app.engine('hbs', handlebars({ extname: '.hbs', helpers: handlebarsHelpers }))
 app.set('view engine', 'hbs')
+app.use(express.urlencoded({ extended: true })) // body-parser
 
 app.use(
   session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false })

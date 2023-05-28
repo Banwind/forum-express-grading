@@ -7,20 +7,25 @@ const userController = {
     res.render('signup')
   },
   signUp: (req, res, next) => {
-    if (req.body.password !== req.body.passwordCheck) {
+    const { name, email, password, passwordCheck } = req.body
+    if (!name || !email || !password || !passwordCheck) {
+      throw new Error("All fields are required.");
+    }
+
+    if (password !== passwordCheck) {
       throw new Error('Passwords do not match!')
     }
 
-    User.findOne({ where: { email: req.body.email } })
+    User.findOne({ where: { email } })
       .then(user => {
         if (user) throw new Error('Email already exists!')
 
-        return bcrypt.hash(req.body.password, 10)
+        return bcrypt.hash(password, 10)
       })
       .then(hash =>
         User.create({
-          name: req.body.name,
-          email: req.body.email,
+          name,
+          email,
           password: hash
         })
       )
@@ -43,24 +48,23 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res, next) => {
+    const userId = req.user.id
     return User.findByPk(req.params.id, {
       include: [{ model: Comment, include: [Restaurant] }]
     })
       .then(user => {
         if (!user) throw new Error("User didn't exist!")
-
         const userComments = user.Comments || 0
         return res.render('users/profile', {
           user: {
             ...user.toJSON(),
-            editable: Number(req.user.id) === user.id
-          },
-          userCommentCount: userComments.length
+            editable: userId === user.id,
+            CommentCount: userComments.length
+          }
         })
       })
       .catch(err => next(err))
   },
-
   editUser: (req, res, next) => {
     return User.findByPk(req.params.id)
       .then(user => {
@@ -72,7 +76,6 @@ const userController = {
   putUser: (req, res, next) => {
     const { name } = req.body
     const { file } = req
-    console.log(req.body)
     if (!name) throw new Error('User name is required!')
 
     return Promise.all([User.findByPk(req.params.id), imgurFileHandler(file)])
