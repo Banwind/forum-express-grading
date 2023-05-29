@@ -9,7 +9,7 @@ const userController = {
   signUp: (req, res, next) => {
     const { name, email, password, passwordCheck } = req.body
     if (!name || !email || !password || !passwordCheck) {
-      throw new Error("All fields are required.");
+      throw new Error('All fields are required.')
     }
 
     if (password !== passwordCheck) {
@@ -48,18 +48,28 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res, next) => {
-    const userId = req.user.id
-    return User.findByPk(req.params.id, {
-      include: [{ model: Comment, include: [Restaurant] }]
+    const userId = req.params.id
+    return User.findByPk(userId, {
+      include: [{ model: Comment, include: [Restaurant] }],
+      nest: true
     })
       .then(user => {
-        if (!user) throw new Error("User didn't exist!")
-        const userComments = user.Comments || 0
+        if (!user) throw new Error("User doesn't exists!")
+        const commentArr = []
+        user = user.toJSON()
+        const userComments = Array.from(user.Comments || [])
+        userComments.forEach(comment => {
+          if (!commentArr.some(r => r.id === comment.Restaurant.id)) {
+            commentArr.push(comment.Restaurant)
+          }
+        })
+        console.log(req.user.id, userId)
         return res.render('users/profile', {
           user: {
-            ...user.toJSON(),
-            editable: userId === user.id,
-            CommentCount: userComments.length
+            ...user,
+            CommentCount: commentArr.length,
+            editable: Number(userId) === Number(req.user.id),
+            Comments: commentArr
           }
         })
       })
