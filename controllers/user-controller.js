@@ -63,12 +63,11 @@ const userController = {
             commentArr.push(comment.Restaurant)
           }
         })
-        console.log(req.user.id, userId)
         return res.render('users/profile', {
           user: {
             ...user,
             CommentCount: commentArr.length,
-            editable: Number(userId) === Number(req.user.id),
+            editable: Number(userId) === Number(req.user?.id || 0),
             Comments: commentArr
           }
         })
