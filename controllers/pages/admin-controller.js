@@ -1,5 +1,5 @@
-const { Category, User, Restaurant } = require('../models')
-const { imgurFileHandler } = require('../helpers/file-helpers')
+const { Category, User, Restaurant } = require('../../models')
+const { imgurFileHandler } = require('../../helpers/file-helpers')
 
 const adminController = {
   getRestaurants: (req, res, next) => {
