@@ -5,8 +5,8 @@ const admin = require('./modules/admin')
 const upload = require('../../middleware/multer')
 
 const restController = require('../../controllers/pages/restaurant-controller')
-const userController = require('../../controllers/pages/user-controller');
-const commentController = require("../../controllers/pages/comment-controller");
+const userController = require('../../controllers/pages/user-controller')
+const commentController = require('../../controllers/pages/comment-controller')
 const { generalErrorHandler } = require('../../middleware/error-handler')
 const { authenticated, authenticatedAdmin } = require('../../middleware/auth')
 
