@@ -1,28 +1,50 @@
 const { Category, Restaurant } = require('../models')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const adminServices = {
   getRestaurants: (req, callback) => {
     Restaurant.findAll({
       raw: true,
       nest: true,
-      include: [Category]
+      include: [Category],
     })
-      .then(restaurants => callback(null, { restaurants }))
-      .catch(err => callback(err))
+      .then((restaurants) => callback(null, { restaurants }))
+      .catch((err) => callback(err));
   },
   deleteRestaurant: (req, callback) => {
     return Restaurant.findByPk(req.params.id)
-      .then(restaurant => {
+      .then((restaurant) => {
         if (!restaurant) {
-          const err = new Error('Restaurant not found!')
-          err.status = 404
-          throw err
+          const err = new Error("Restaurant not found!");
+          err.status = 404;
+          throw err;
         }
-        return restaurant.destroy()
+        return restaurant.destroy();
       })
-      .then(deletedRestaurant => callback(null, { restaurant: deletedRestaurant }))
-      .catch(err => callback(err))
+      .then((deletedRestaurant) =>
+        callback(null, { restaurant: deletedRestaurant })
+      )
+      .catch((err) => callback(err));
   },
-}
+  postRestaurant: (req, callback) => {
+    const { name, tel, address, openingHours, description, categoryId } = req.body;
+    if (!name) throw new Error("Restaurant name is required!");
+    const { file } = req; // const file = req.file
+    imgurFileHandler(file)
+      .then(filePath => Restaurant.create({
+        name,
+        tel,
+        address,
+        openingHours,
+        description,
+        Image: filePath || null,
+        categoryId
+      }))
+      .then((restaurant) =>
+        callback(null, { restaurant })
+      )
+      .catch((err) => callback(err));
+  },
+};
 
 module.exports = adminServices

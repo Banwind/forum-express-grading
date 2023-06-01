@@ -20,10 +20,8 @@ const port = process.env.PORT || 3000
 app.engine('hbs', handlebars({ extname: '.hbs', helpers: handlebarsHelpers }))
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true })) // body-parser
-
-app.use(
-  session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false })
-)
+app.use(express.json())
+app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
 app.use(passport.initialize()) // @Add,初始化Passport
 app.use(passport.session()) // @Add, 啟動 session 功能
 
